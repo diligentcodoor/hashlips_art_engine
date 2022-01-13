@@ -5,7 +5,7 @@ const { NETWORK } = require(`${basePath}/constants/network.js`);
 const network = NETWORK.eth;
 
 // General metadata for Ethereum
-const namePrefix = "Your Collection";
+const namePrefix = "Huxlxy";
 const description = "Remember to replace this description";
 const baseUri = "ipfs://NewUriToReplace";
 
@@ -24,15 +24,12 @@ const solanaMetadata = {
 // If you have selected Solana then the collection starts from 0 automatically
 const layerConfigurations = [
   {
-    growEditionSizeTo: 5,
+    growEditionSizeTo: 1,
     layersOrder: [
-      { name: "Background" },
-      { name: "Eyeball" },
-      { name: "Eye color" },
-      { name: "Iris" },
-      { name: "Shine" },
-      { name: "Bottom lid" },
-      { name: "Top lid" },
+      { name: "background", options: { displayName: "Background" } },
+      { name: "huxlxy", options: { displayName: "Huxlxy" } },
+      { name: "font", options: { displayName: "Tat" } },
+      { name: "music", options: { displayName: "Track" } },
     ],
   },
 ];
@@ -42,14 +39,14 @@ const shuffleLayerConfigurations = false;
 const debugLogs = false;
 
 const format = {
-  width: 512,
-  height: 512,
+  width: 1920,
+  height: 1920,
   smoothing: false,
 };
 
 const gif = {
-  export: false,
-  repeat: 0,
+  export: true,
+  repeat: -1,
   quality: 100,
   delay: 500,
 };
@@ -78,21 +75,23 @@ const background = {
   default: "#000000",
 };
 
-const extraMetadata = {};
+const extraMetadata = {
+  creator: "Huxlxy"
+};
 
 const rarityDelimiter = "#";
 
 const uniqueDnaTorrance = 10000;
 
 const preview = {
-  thumbPerRow: 5,
+  thumbPerRow: 10,
   thumbWidth: 50,
   imageRatio: format.height / format.width,
   imageName: "preview.png",
 };
 
 const preview_gif = {
-  numberOfImages: 5,
+  numberOfImages: 90,
   order: "ASC", // ASC, DESC, MIXED
   repeat: 0,
   quality: 100,

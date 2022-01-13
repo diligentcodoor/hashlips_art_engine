@@ -3,6 +3,7 @@ const { NETWORK } = require(`${basePath}/constants/network.js`);
 const fs = require("fs");
 const sha1 = require(`${basePath}/node_modules/sha1`);
 const { createCanvas, loadImage } = require(`${basePath}/node_modules/canvas`);
+const ffmpeg = require('fluent-ffmpeg');
 const buildDir = `${basePath}/build`;
 const layersDir = `${basePath}/layers`;
 const {
@@ -40,6 +41,7 @@ const buildSetup = () => {
   fs.mkdirSync(buildDir);
   fs.mkdirSync(`${buildDir}/json`);
   fs.mkdirSync(`${buildDir}/images`);
+  fs.mkdirSync(`${buildDir}/videos`);
   if (gif.export) {
     fs.mkdirSync(`${buildDir}/gifs`);
   }
@@ -117,6 +119,14 @@ const saveImage = (_editionCount) => {
   );
 };
 
+const saveVideo = (_editionCount, _audioElement) => {
+  const inputImage = `${buildDir}/images/${_editionCount}.png`;
+  const outputVideo = `${buildDir}/videos/${_editionCount}.mp4`;
+  const command = ffmpeg(inputImage)
+    .input(_audioElement.path)
+    .save(outputVideo)
+};
+
 const genColor = () => {
   let hue = Math.floor(Math.random() * 360);
   let pastel = `hsl(${hue}, 100%, ${background.brightness})`;
@@ -139,7 +149,6 @@ const addMetadata = (_dna, _edition) => {
     date: dateTime,
     ...extraMetadata,
     attributes: attributesList,
-    compiler: "HashLips Art Engine",
   };
   if (network == NETWORK.sol) {
     tempMetadata = {
@@ -173,9 +182,15 @@ const addMetadata = (_dna, _edition) => {
 
 const addAttributes = (_element) => {
   let selectedElement = _element.layer.selectedElement;
+  let value =
+    selectedElement.name
+      .replace("_", " ")
+      .split(" ")
+      .map(word => word[0].toUpperCase() + word.slice(1))
+      .join(" ");
   attributesList.push({
     trait_type: _element.layer.name,
-    value: selectedElement.name,
+    value,
   });
 };
 
@@ -364,7 +379,26 @@ const startCreating = async () => {
         let results = constructLayerToDna(newDna, layers);
         let loadedElements = [];
 
+        let huxlxyLayerName = '';
         results.forEach((layer) => {
+          if (layer.name === 'Huxlxy') {
+            huxlxyLayerName = layer.selectedElement.name;
+          }
+
+          if (layer.name === 'Tat') {
+            if (huxlxyLayerName === 'OG') {
+              loadedElements.push({ name: 'Empty-Tat' })
+              return;
+            }
+            if (huxlxyLayerName === 'RICH') {
+              loadedElements.push({ name: 'Rich-Tat' })
+              return;
+            }
+          }
+          if (layer.name === 'Track') {
+            loadedElements.push(layer);
+            return;
+          }
           loadedElements.push(loadLayerImg(layer));
         });
 
@@ -386,6 +420,18 @@ const startCreating = async () => {
             drawBackground();
           }
           renderObjectArray.forEach((renderObject, index) => {
+            if (renderObject.name === 'Empty-Tat') {
+              addAttributes({ layer: { name: 'Tat', selectedElement: { name: 'NONE'}}})
+              return;
+            }
+            if (renderObject.name === 'Rich-Tat') {
+              addAttributes({ layer: { name: 'Tat', selectedElement: { name: 'RICH'}}})
+              return;
+            }
+            if (renderObject.name === 'Track') {
+              addAttributes({ layer: renderObject});
+              return;
+            }
             drawElement(
               renderObject,
               index,
@@ -402,6 +448,7 @@ const startCreating = async () => {
             ? console.log("Editions left to create: ", abstractedIndexes)
             : null;
           saveImage(abstractedIndexes[0]);
+          saveVideo(abstractedIndexes[0], renderObjectArray[renderObjectArray.length-1].selectedElement);
           addMetadata(newDna, abstractedIndexes[0]);
           saveMetaDataSingleFile(abstractedIndexes[0]);
           console.log(
