@@ -144,6 +144,7 @@ const addMetadata = (_dna, _edition) => {
     name: `${namePrefix} #${_edition}`,
     description: description,
     image: `${baseUri}/${_edition}.png`,
+    animation_url: `${baseUri}/${_edition}.mp4`,
     dna: sha1(_dna),
     edition: _edition,
     date: dateTime,

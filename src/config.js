@@ -6,7 +6,7 @@ const network = NETWORK.eth;
 
 // General metadata for Ethereum
 const namePrefix = "Huxlxy";
-const description = "Remember to replace this description";
+const description = "These 'Huxlxy' NFTs were created by me personally as a one of a kind collectible token for those who believe in my vision as a musician as well as the strength of digital art in the coming future. With 10,000 unique variants, brand new musical elements and striking imagery, to own a 'Huxlxy' is to show the world that you belong where music, technology, and art intersect.";
 const baseUri = "ipfs://NewUriToReplace";
 
 const solanaMetadata = {
@@ -24,7 +24,7 @@ const solanaMetadata = {
 // If you have selected Solana then the collection starts from 0 automatically
 const layerConfigurations = [
   {
-    growEditionSizeTo: 1,
+    growEditionSizeTo: 10000,
     layersOrder: [
       { name: "background", options: { displayName: "Background" } },
       { name: "huxlxy", options: { displayName: "Huxlxy" } },
@@ -45,7 +45,7 @@ const format = {
 };
 
 const gif = {
-  export: true,
+  export: false,
   repeat: -1,
   quality: 100,
   delay: 500,
