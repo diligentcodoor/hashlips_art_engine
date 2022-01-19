@@ -23,8 +23,13 @@ layerConfigurations.forEach((config) => {
     let elements = getElements(`${layersDir}/${layer.name}/`);
     elements.forEach((element) => {
       // just get name and weight for each element
+      const trait = element.name
+        .replace("_", " ")
+        .split(" ")
+        .map(word => word[0].toUpperCase() + word.slice(1))
+        .join(" ");
       let rarityDataElement = {
-        trait: element.name,
+        trait: trait,
         weight: element.weight.toFixed(0),
         occurrence: 0, // initialize at 0
       };
