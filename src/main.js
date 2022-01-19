@@ -119,12 +119,16 @@ const saveImage = (_editionCount) => {
   );
 };
 
-const saveVideo = (_editionCount, _audioElement) => {
+const saveVideo = async (_editionCount, _audioElement) => {
   const inputImage = `${buildDir}/images/${_editionCount}.png`;
   const outputVideo = `${buildDir}/videos/${_editionCount}.mp4`;
-  const command = ffmpeg(inputImage)
+  return new Promise((resolve, reject) => {
+    ffmpeg(inputImage)
     .input(_audioElement.path)
+    .on("end", (stdout, stderr) => resolve())
+    .on("error", (err, stdout, stderr) => reject(err))
     .save(outputVideo)
+  });
 };
 
 const genColor = () => {
@@ -403,7 +407,7 @@ const startCreating = async () => {
           loadedElements.push(loadLayerImg(layer));
         });
 
-        await Promise.all(loadedElements).then((renderObjectArray) => {
+        await Promise.all(loadedElements).then(async (renderObjectArray) => {
           debugLogs ? console.log("Clearing canvas") : null;
           ctx.clearRect(0, 0, format.width, format.height);
           if (gif.export) {
@@ -449,7 +453,7 @@ const startCreating = async () => {
             ? console.log("Editions left to create: ", abstractedIndexes)
             : null;
           saveImage(abstractedIndexes[0]);
-          saveVideo(abstractedIndexes[0], renderObjectArray[renderObjectArray.length-1].selectedElement);
+          await saveVideo(abstractedIndexes[0], renderObjectArray[renderObjectArray.length-1].selectedElement);
           addMetadata(newDna, abstractedIndexes[0]);
           saveMetaDataSingleFile(abstractedIndexes[0]);
           console.log(
