@@ -6,8 +6,9 @@ const network = NETWORK.eth;
 
 // General metadata for Ethereum
 const namePrefix = "Huxlxy";
-const description = "These 'Huxlxy' NFTs were created by me personally as a one of a kind collectible token for those who believe in my vision as a musician as well as the strength of digital art in the coming future. With 10,000 unique variants, brand new musical elements and striking imagery, to own a 'Huxlxy' is to show the world that you belong where music, technology, and art intersect.";
-const baseUri = "ipfs://NewUriToReplace";
+const description =
+  "These 'Huxlxy' NFTs were created by me personally as a one of a kind collectible token for those who believe in my vision as a musician as well as the strength of digital art in the coming future. With 10,000 unique variants, brand new musical elements and striking imagery, to own a 'Huxlxy' is to show the world that you belong where music, technology, and art intersect.";
+const baseUri = "ipfs://QmWRWebqaK1seByLgKUHQHPtws1NtmBoxgxsvGjQLjZU4R";
 
 const solanaMetadata = {
   symbol: "YC",
@@ -39,14 +40,14 @@ const shuffleLayerConfigurations = false;
 const debugLogs = false;
 
 const format = {
-  width: 1920,
-  height: 1920,
+  width: 800,
+  height: 800,
   smoothing: false,
 };
 
 const gif = {
   export: false,
-  repeat: -1,
+  repeat: 0,
   quality: 100,
   delay: 500,
 };
@@ -76,7 +77,7 @@ const background = {
 };
 
 const extraMetadata = {
-  creator: "Huxlxy"
+  creator: "Huxlxy",
 };
 
 const rarityDelimiter = "#";
@@ -84,14 +85,14 @@ const rarityDelimiter = "#";
 const uniqueDnaTorrance = 10000;
 
 const preview = {
-  thumbPerRow: 10,
+  thumbPerRow: 100,
   thumbWidth: 50,
   imageRatio: format.height / format.width,
   imageName: "preview.png",
 };
 
 const preview_gif = {
-  numberOfImages: 90,
+  numberOfImages: 50,
   order: "ASC", // ASC, DESC, MIXED
   repeat: 0,
   quality: 100,
