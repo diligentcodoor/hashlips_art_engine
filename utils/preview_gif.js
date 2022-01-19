@@ -1,6 +1,7 @@
 const basePath = process.cwd();
 const fs = require("fs");
 const { createCanvas, loadImage } = require("canvas");
+const { preview } = require("../src/config");
 const buildDir = `${basePath}/build`;
 const imageDir = `${buildDir}/images`;
 const { format, preview_gif } = require(`${basePath}/src/config.js`);
@@ -19,7 +20,7 @@ const loadImg = async (_img) => {
 
 // read image paths
 const imageList = [];
-const rawdata = fs.readdirSync(imageDir).forEach((file) => {
+const rawdata = fs.readdirSync(imageDir).slice(0, preview_gif.numberOfImages).forEach((file) => {
   imageList.push(loadImg(`${imageDir}/${file}`));
 });
 
@@ -88,4 +89,6 @@ const saveProjectPreviewGIF = async (_data) => {
   }
 };
 
-saveProjectPreviewGIF(imageList);
+(async () => {
+  await saveProjectPreviewGIF(imageList);
+})();
