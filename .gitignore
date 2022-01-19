@@ -142,4 +142,4 @@ dist
 .DS_Store
 
 layers
-build.zip
+build*.zip
