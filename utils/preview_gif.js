@@ -20,9 +20,13 @@ const loadImg = async (_img) => {
 
 // read image paths
 const imageList = [];
-const rawdata = fs.readdirSync(imageDir).slice(0, preview_gif.numberOfImages).forEach((file) => {
-  imageList.push(loadImg(`${imageDir}/${file}`));
-});
+const rawdata = fs
+  .readdirSync(imageDir)
+  .filter((file) => file.slice(-1) !== "4")
+  .slice(0, preview_gif.numberOfImages)
+  .forEach((file) => {
+    imageList.push(loadImg(`${imageDir}/${file}`));
+  });
 
 const saveProjectPreviewGIF = async (_data) => {
   // Extract from preview config
