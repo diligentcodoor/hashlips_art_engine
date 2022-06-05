@@ -8,6 +8,7 @@ const { preview } = require(`${basePath}/src/config.js`);
 // read json data
 const rawdata = fs.readFileSync(`${basePath}/build/json/_metadata.json`);
 const metadataList = JSON.parse(rawdata);
+const files = fs.readdirSync(`${buildDir}/images/`);
 
 const saveProjectPreviewImage = async (_data) => {
   // Extract from preview config
@@ -31,8 +32,9 @@ const saveProjectPreviewImage = async (_data) => {
   // Iterate all NFTs and insert thumbnail into preview image
   // Don't want to rely on "edition" for assuming index
   for (let index = 0; index < _data.length; index++) {
-    const nft = _data[index];
-    await loadImage(`${buildDir}/images/${nft.edition}.png`).then((image) => {
+    const nft = files[index];
+    console.log(nft);
+    await loadImage(`${buildDir}/images/${nft}`).then((image) => {
       previewCtx.drawImage(
         image,
         thumbWidth * (index % thumbPerRow),
@@ -48,4 +50,4 @@ const saveProjectPreviewImage = async (_data) => {
   console.log(`Project preview image located at: ${previewPath}`);
 };
 
-saveProjectPreviewImage(metadataList);
+saveProjectPreviewImage(files);
