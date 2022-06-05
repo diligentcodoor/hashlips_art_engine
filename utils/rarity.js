@@ -21,12 +21,16 @@ layerConfigurations.forEach((config) => {
     // get elements for each layer
     let elementsForLayer = [];
     let elements = getElements(`${layersDir}/${layer.name}/`);
-    elements.forEach((element) => {
+    [
+      ...elements,
+      { name: "RICH", weight: 50 },
+      { name: "NONE", weight: 50 },
+    ].forEach((element) => {
       // just get name and weight for each element
       const trait = element.name
         .replace("_", " ")
         .split(" ")
-        .map(word => word[0].toUpperCase() + word.slice(1))
+        .map((word) => word[0].toUpperCase() + word.slice(1))
         .join(" ");
       let rarityDataElement = {
         trait: trait,
@@ -65,23 +69,55 @@ data.forEach((element) => {
 });
 
 // convert occurrences to occurence string
-for (var layer in rarityData) {
-  for (var attribute in rarityData[layer]) {
-    // get chance
-    let chance =
-      ((rarityData[layer][attribute].occurrence / editionSize) * 100).toFixed(2);
+// for (var layer in rarityData) {
+//   for (var attribute in rarityData[layer]) {
+//     // get chance
+//     let chance = (
+//       (rarityData[layer][attribute].occurrence / editionSize) *
+//       100
+//     ).toFixed(2);
 
-    // show two decimal places in percent
-    rarityData[layer][attribute].occurrence =
-      `${rarityData[layer][attribute].occurrence} in ${editionSize} editions (${chance} %)`;
-  }
-}
+//     // show two decimal places in percent
+//     rarityData[layer][
+//       attribute
+//     ].occurrence = `${rarityData[layer][attribute].occurrence} in ${editionSize} editions (${chance} %)`;
+//   }
+// }
 
 // print out rarity data
-for (var layer in rarityData) {
-  console.log(`Trait type: ${layer}`);
-  for (var trait in rarityData[layer]) {
-    console.log(rarityData[layer][trait]);
-  }
-  console.log();
+// for (var layer in rarityData) {
+//   console.log(`Trait type: ${layer}`);
+//   for (var trait in rarityData[layer]) {
+//     console.log(rarityData[layer][trait]);
+//   }
+//   console.log();
+// }
+
+const nftsWithScores = data.map((nft, i) => {
+  return {
+    tokenId: i,
+    rarity: nft.attributes.reduce((rarityScore, attribute) => {
+      const { trait_type: layer, value } = attribute;
+      const { occurrence } = rarityData[layer].find(
+        (trait) => trait.trait == value
+      );
+      return rarityScore * (occurrence / editionSize);
+    }, 1),
+  };
+});
+
+// console.log(JSON.stringify(nftsWithScores, null, 2));
+
+function range(start, end) {
+  return Array(end - start + 1)
+    .fill()
+    .map((_, idx) => start + idx);
 }
+
+const rankings = nftsWithScores
+  .sort((a, b) => a.rarity - b.rarity)
+  .reduce((rankings, nft, i) => ({ ...rankings, [nft.tokenId]: i }), {});
+
+const myTokenIds = range(671, 795);
+
+myTokenIds.forEach((id) => console.log(`${id}: ${rankings[id]}`));
